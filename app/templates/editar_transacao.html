@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Transação - FinancePRO{% endblock %}
+
+{% block content %}
+    <h1 ...>Editar Transação</h1>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <form method="POST">
+            <div class="mb-4">
+                <label for="categoria_id" class="block font-medium mb-1">Categoria:</label>
+                <select name="categoria_id" id="categoria_id" required class="w-full p-2 border border-slate-300 rounded-md">
+                    {% for cat in categorias %}
+                    <option value="{{ cat.id }}" {% if cat.id == transacao.categoria_id %}selected{% endif %}>
+                        {{ cat.nome }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" ...>Salvar Alterações</button>
+        </form>
+    </div>
+    {% endblock %}

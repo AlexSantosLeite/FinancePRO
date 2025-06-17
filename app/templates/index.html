@@ -1,54 +1,53 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-g">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinancePRO</title>
-    <style>
-        body { font-family: sans-serif; margin: 2em; }
-        .receita { color: green; }
-        .despesa { color: red; }
-    </style>
-</head>
-<body>
-    <h1>Meu Controle Financeiro</h1>
+{% extends "base.html" %}
 
-    <hr>
+{% block title %}Página Inicial - FinancePRO{% endblock %}
 
-    <h2>Adicionar Nova Transação</h2>
-    <form action="/adicionar" method="POST">
-        <label for="tipo">Tipo:</label>
-        <select name="tipo" id="tipo" required>
-            <option value="receita">Receita</option>
-            <option value="despesa">Despesa</option>
-        </select>
-        <br><br>
-        <label for="descricao">Descrição:</label>
-        <input type="text" name="descricao" id="descricao" required>
-        <br><br>
-        <label for="valor">Valor (R$):</label>
-        <input type="number" name="valor" id="valor" step="0.01" required>
-        <br><br>
-        <button type="submit">Adicionar</button>
-    </form>
-
-    <hr>
-
-    <h2>Histórico de Transações</h2>
-    <ul>
-                {% for transacao in transacoes %}
-                    <li class="{{ transacao.tipo }}">
-                        {{ transacao.data.strftime('%d/%m/%Y') }} - {{ transacao.descricao }}: R$ {{ "%.2f"|format(transacao.valor) }}
-                        
-                        <form action="{{ url_for('main.excluir', id=transacao.id) }}" method="POST" style="display: inline; margin-left: 10px;">
-                            <button type="submit">Excluir</button>
-                        </form>
+{% block content %}
+    <h1 class="text-4xl font-bold text-slate-900 mb-6">Meu Controle Financeiro</h1>
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-2xl font-semibold mb-4">Adicionar Nova Transação</h2>
+        <form action="{{ url_for('main.adicionar') }}" method="POST">
+            <div class="mb-4">
+                <label for="tipo" class="block font-medium mb-1">Tipo:</label>
+                <select name="tipo" id="tipo" required class="w-full p-2 border border-slate-300 rounded-md">
+                    <option value="receita">Receita</option>
+                    <option value="despesa">Despesa</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="descricao" class="block font-medium mb-1">Descrição:</label>
+                <input type="text" name="descricao" id="descricao" required class="w-full p-2 border border-slate-300 rounded-md">
+            </div>
+            <div class="mb-4">
+                <label for="valor" class="block font-medium mb-1">Valor (R$):</label>
+                <input type="number" name="valor" id="valor" step="0.01" required class="w-full p-2 border border-slate-300 rounded-md">
+            </div>
+            <div class="mb-4">
+                <label for="categoria_id" class="block font-medium mb-1">Categoria:</label>
+                <select name="categoria_id" id="categoria_id" required class="w-full p-2 border border-slate-300 rounded-md">
+                    {% for cat in categorias %}
+                    <option value="{{ cat.id }}">{{ cat.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">Adicionar</button>
+        </form>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Histórico de Transações</h2>
+        <ul>
+            {% for transacao in transacoes %}
+                <li class="flex justify-between items-center border-b border-slate-200 py-3">
+                    <div>
+                        <span class="text-xs bg-slate-200 text-slate-600 font-semibold px-2 py-1 rounded-full">{{ transacao.categoria.nome }}</span>
+                        <span class="{{ 'text-green-600' if transacao.tipo == 'receita' else 'text-red-600' }} ml-2">
+                            {{ transacao.descricao }}: R$ {{ "%.2f"|format(transacao.valor) }}
+                        </span>
+                    </div>
                     </li>
-                {% else %}
-                    <li>Nenhuma transação registrada ainda.</li>
-                {% endfor %}
-            </ul>
-
-    <h2>Saldo Total: <span class="{{ 'receita' if saldo >= 0 else 'despesa' }}">R$ {{ "%.2f"|format(saldo) }}</span></h2>
-</body>
-</html>
+            {% else %}
+                ...
+            {% endfor %}
+        </ul>
+        </div>
+{% endblock %}
