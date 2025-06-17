@@ -1,0 +1,11 @@
+# Arquivos de Ambiente Virtual e IDE
+venv/
+.vscode/
+
+# Arquivos de Banco de Dados e Scripts de Setup
+finance.db
+create_db.py
+
+# Arquivos temporários do Python
+__pycache__/
+*.pyc
